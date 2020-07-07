@@ -1,0 +1,43 @@
+version: "3.3"
+
+services:
+  godb_pgql:
+    image: postgres:alpine
+    container_name: godb_pgql
+    restart: always
+    volumes:
+      - godb_pgql_backup:/docker-entrypoint-initdb.d
+      - godb_pgql_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: godb_master
+
+  godb_app:
+    depends_on:
+      - godb_pgql
+    image: prakasa1904/godb-base
+    container_name: godb_app
+    working_dir: /devetek
+    volumes:
+      - .:/devetek
+      - ./scripts/pgql.sh:/devetek/pgql
+    restart: always
+    environment:
+      DB_USER: root
+      DB_PASSWORD: root
+    command: ["./pgql", "godb_pgql", "go", "run", "main.go"]
+
+volumes:
+  godb_pgql_backup:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/volume/pgql/restore
+      o: bind
+  godb_pgql_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/volume/pgql/volume
+      o: bind
