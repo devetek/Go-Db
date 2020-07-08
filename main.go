@@ -1,37 +1,22 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"log"
+	"net/http"
 
-	_ "github.com/lib/pq"
-)
-
-const (
-	host     = "godb_pgql"
-	port     = 5432
-	user     = "root"
-	password = "root"
-	dbname   = "godb_master"
+	dashboardRoute "github.com/devetek/go-db/routes/dashboard"
+	homeRoute "github.com/devetek/go-db/routes/home"
+	memberRoute "github.com/devetek/go-db/routes/member"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+	r := mux.NewRouter()
 
-	db, err := sql.Open("postgres", psqlInfo)
+	r.HandleFunc("/dashboard", dashboardRoute.DashboardHandler)
+	r.HandleFunc("/member", memberRoute.MemberHandler)
+	r.HandleFunc("/", homeRoute.HomeHandler)
+	http.Handle("/", r)
 
-	if err != nil {
-		panic(err)
-	}
-
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Successfully connected!")
+	log.Fatal(http.ListenAndServe(":9000", nil))
 }

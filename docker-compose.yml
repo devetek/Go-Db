@@ -8,10 +8,12 @@ services:
     volumes:
       - godb_pgql_backup:/docker-entrypoint-initdb.d
       - godb_pgql_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: godb_master
+      POSTGRES_DB: root
 
   godb_app:
     depends_on:
@@ -21,12 +23,16 @@ services:
     working_dir: /devetek
     volumes:
       - .:/devetek
+      - ./tmp/:/devetek/tmp/
+      - .air.conf:/devetek/.air.conf
       - ./scripts/pgql.sh:/devetek/pgql
     restart: always
     environment:
       DB_USER: root
       DB_PASSWORD: root
-    command: ["./pgql", "godb_pgql", "go", "run", "main.go"]
+    command: ["./pgql", "godb_pgql", "air"]
+    ports:
+      - 9000:9000
 
 volumes:
   godb_pgql_backup:

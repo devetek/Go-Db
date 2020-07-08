@@ -6,5 +6,6 @@ COPY . .
 
 RUN apk update && apk upgrade; \
     apk add --no-cache postgresql-client; \
+    go get -u github.com/cosmtrek/air; \
     go mod tidy; \
     rm -rf scripts volume main.go Makefile docker-compose.yml .gitignore .dockerignore;
