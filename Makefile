@@ -19,6 +19,9 @@ base-devimage:
 # ========================================
 .PHONY: run-dev
 run-dev:
+	# Adding basic validator, to make sure if the environment is ready to use this one dev command
+	# @ scripts/validator.sh docker docker-compose
+
 	# Validate selecting database engine, only support for mysql and pgql
 ifeq ($(DB),)
 	@ sh -c "Please use `make run-dev DB=mysql` OR `make run-dev DB=pgql` && exit 1"
