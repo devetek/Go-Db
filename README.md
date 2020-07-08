@@ -11,7 +11,7 @@ Sebelum menjalankan tutorial ini, pastikan semua hal yang dibutuhkan terpenuhi. 
 
 #### Docker and UNIX System
 
-Jika menggunakan OS UNIX semisal `Ubuntu` atau `macOS` serta sudah terinstall docker dan docker-compose, gunakan command di bawah ini untuk mejalankan mode development denngan 1 command:
+Jika menggunakan OS UNIX semisal `Ubuntu` atau `macOS` serta sudah terinstall docker dan docker-compose, gunakan command di bawah ini untuk mejalankan mode development dengan 1 command:
 
 ```sh
 make run-dev
