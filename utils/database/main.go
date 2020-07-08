@@ -1,28 +1,32 @@
 package database
 
+/**
+Basic Ref:
+- https://www.alexedwards.net/blog/configuring-sqldb
+*/
+
 import (
 	"database/sql"
 	"fmt"
 
+	"github.com/devetek/go-db/utils/config"
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "godb_pgql"
-	port     = 5432
-	user     = "root"
-	password = "root"
-	dbname   = "root"
-)
-
 var db *sql.DB
+var conf *config.Config
 
 func Init() *sql.DB {
+	conf := config.Init()
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		conf.Database.Host, conf.Database.Port, conf.Database.Username, conf.Database.Password, conf.Database.Db)
 
 	db, err := sql.Open("postgres", psqlInfo)
+
+	db.SetMaxIdleConns(5)
+	db.SetMaxOpenConns(5)
 
 	if err != nil {
 		panic(err)
